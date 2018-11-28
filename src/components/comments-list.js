@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Comment from './comment'
+import CollapsibleList from '../decorators/collapsible-list'
 
 class CommentsList extends Component {
   state = {
@@ -14,14 +15,14 @@ class CommentsList extends Component {
   }
 
   commentItems() {
-    const { comments } = this.props
+    const { comments, isExpanded, toggleExpand } = this.props
     return (
       comments && (
         <div style={{ marginTop: '20px' }}>
-          <button onClick={this.toggleExpand}>
-            {this.state.isExpanded ? 'Hide comments' : 'Show comments (' + comments.length + ')'}
+          <button onClick={toggleExpand}>
+            {isExpanded ? 'Hide comments' : 'Show comments (' + comments.length + ')'}
           </button>
-          {this.state.isExpanded && (
+          {isExpanded && (
             <ul>
               {comments.map((comment) => (
                 <li key={comment.id}>
@@ -36,4 +37,4 @@ class CommentsList extends Component {
   }
 }
 
-export default CommentsList
+export default CollapsibleList(CommentsList)
