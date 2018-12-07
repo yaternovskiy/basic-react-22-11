@@ -1,8 +1,17 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import Article from './article'
 import accordion from '../decorators/accordion'
+import { filtratedArticlesSelector } from '../selectors'
 
 export class ArticleList extends Component {
+  static propTypes = {
+    articles: PropTypes.array.isRequired,
+    openItemId: PropTypes.string,
+    toggleOpenItem: PropTypes.func.isRequired
+  }
+
   setListRef = (ref) => {
     this.list = ref
   }
@@ -22,6 +31,7 @@ export class ArticleList extends Component {
   }
 
   render() {
+    console.log('---', 'render article list')
     if (this.state.error) return <h3>Error</h3>
     return <ul ref={this.setListRef}>{this.articleItems()}</ul>
   }
@@ -40,4 +50,9 @@ export class ArticleList extends Component {
   }
 }
 
-export default accordion(ArticleList)
+export default connect((state) => {
+  console.log('---', 'connect')
+  return {
+    articles: filtratedArticlesSelector(state)
+  }
+})(accordion(ArticleList))
