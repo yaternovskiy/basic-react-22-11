@@ -1,26 +1,39 @@
 import { createSelector } from 'reselect'
 
-export const articlesSelector = (state) => state.articles
+export const articlesMapSelector = (state) => state.articles.entities
+export const articleListSelector = createSelector(
+  articlesMapSelector,
+  (articlesMap) => articlesMap.valueSeq().toArray()
+)
 
-export const commentsSelector = (state) => state.comments
+export const articlesLoadingSelector = (state) => state.articles.loading
+export const articlesLoadedSelector = (state) => state.articles.loaded
+
+export const commentsMapSelector = (state) => state.comments.entities
 
 export const selectedArticlesSelector = (state) => state.filters.selected
 export const dateRangeSelector = (state) => state.filters.dateRange
 
 export const idSelector = (_, props) => props.id
 
+export const articleSelector = createSelector(
+  articlesMapSelector,
+  idSelector,
+  (articles, id) => articles.get(id)
+)
+
 export const createCommentSelector = () =>
   createSelector(
-    commentsSelector,
+    commentsMapSelector,
     idSelector,
     (comments, id) => {
       console.log('---', 'comment selector', id)
-      return comments[id]
+      return comments.get(id)
     }
   )
 
 export const filtratedArticlesSelector = createSelector(
-  articlesSelector,
+  articleListSelector,
   selectedArticlesSelector,
   dateRangeSelector,
   (articles, selected, dateRange) => {
@@ -35,4 +48,18 @@ export const filtratedArticlesSelector = createSelector(
       )
     })
   }
+)
+
+export const totalCommentsSelector = (state) => state.comments.total
+export const commentsPagenationSelector = (state) => state.comments.pagination
+export const pageSelector = (_, props) => props.page
+export const commentsPageIdsSelector = createSelector(
+  commentsPagenationSelector,
+  pageSelector,
+  (pagination, page) => pagination.getIn([page, 'ids'])
+)
+export const commentsPageLoadingSelector = createSelector(
+  commentsPagenationSelector,
+  pageSelector,
+  (pagination, page) => pagination.getIn([page, 'loading'])
 )

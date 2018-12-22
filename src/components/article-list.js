@@ -1,9 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import Article from './article'
 import accordion from '../decorators/accordion'
-import { filtratedArticlesSelector } from '../selectors'
+import {
+  articlesLoadedSelector,
+  articlesLoadingSelector,
+  filtratedArticlesSelector
+} from '../selectors'
+import { loadAllArticles } from '../ac'
+import Loader from './common/loader'
+import { NavLink } from 'react-router-dom'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
+import './article-list.css'
 
 export class ArticleList extends Component {
   static propTypes = {
@@ -25,34 +33,43 @@ export class ArticleList extends Component {
   }
 
   componentDidMount() {
-    const { fetchAllArticles } = this.props
+    const { fetchAllArticles, loading, loaded } = this.props
 
-    fetchAllArticles && fetchAllArticles()
+    fetchAllArticles && !loading && !loaded && fetchAllArticles()
   }
 
   render() {
     console.log('---', 'render article list')
     if (this.state.error) return <h3>Error</h3>
-    return <ul ref={this.setListRef}>{this.articleItems()}</ul>
+    if (this.props.loading) return <Loader />
+    return (
+      <ul ref={this.setListRef}>
+        <TransitionGroup>{this.articleItems()}</TransitionGroup>
+      </ul>
+    )
   }
 
   articleItems() {
-    const { articles, openItemId, toggleOpenItem } = this.props
+    const { articles } = this.props
     return articles.map((article) => (
-      <li key={article.id} className="test__article-list--item">
-        <Article
-          article={article}
-          isOpen={openItemId === article.id}
-          toggleOpen={toggleOpenItem(article.id)}
-        />
-      </li>
+      <CSSTransition key={article.id} classNames="articles" timeout={500}>
+        <li className="test__article-list--item">
+          <NavLink to={`/articles/${article.id}`} activeStyle={{ color: 'red' }}>
+            {article.title}
+          </NavLink>
+        </li>
+      </CSSTransition>
     ))
   }
 }
 
-export default connect((state) => {
-  console.log('---', 'connect')
-  return {
-    articles: filtratedArticlesSelector(state)
-  }
-})(accordion(ArticleList))
+export default connect(
+  (state) => {
+    return {
+      articles: filtratedArticlesSelector(state),
+      loading: articlesLoadingSelector(state),
+      loaded: articlesLoadedSelector(state)
+    }
+  },
+  { fetchAllArticles: loadAllArticles }
+)(accordion(ArticleList))
