@@ -9,7 +9,7 @@ const renderList = (props) => (
     <h1>Articles</h1>
     <section>
       {articles.map((el) => (
-        <ArticleCollapsible title={el.title} text={el.text} />
+        <ArticleCollapsible key={el.id} title={el.title} text={el.text} />
       ))}
     </section>
   </div>
