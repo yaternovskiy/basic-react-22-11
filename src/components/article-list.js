@@ -1,20 +1,29 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-import articles from '../fixtures'
-import { ArticleCollapsible } from './article'
-import { collapsible } from '../decorators/accordion'
+import { Article } from './article'
+import { Accordion } from '../decorators/accordion'
 
-const renderList = (props) => (
-  <div className="article-list">
-    <h1>Articles</h1>
-    <section>
-      {articles.map((el) => (
-        <ArticleCollapsible key={el.id} title={el.title} text={el.text} />
-      ))}
-    </section>
-  </div>
-)
+const renderList = (props) => {
+  const { openId, toggleOpen, articles } = props
 
-const ArticleList = () => renderList()
+  return (
+    <div className="article-list">
+      <h1>Articles</h1>
+      <ul>
+        {articles.map((article) => (
+          <Article
+            key={article.id}
+            article={article}
+            id={article.id}
+            isOpen={openId === article.id}
+            toggleOpen={toggleOpen}
+          />
+        ))}
+      </ul>
+    </div>
+  )
+}
 
-export const ArticleListCollapsible = collapsible(ArticleList)
+const ArticleList = (props) => renderList(props)
+
+export const ArticleListCollapsible = Accordion(ArticleList)

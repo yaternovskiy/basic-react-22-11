@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
 import { collapsible } from '../decorators/accordion'
 
-const Article = (props) => {
-  const { title, text, collapsed, collapse } = props
+export const Article = (props) => {
+  const { article, isOpen, toggleOpen } = props
+
+  const onToggleClick = () => {
+    toggleOpen(article.id)
+  }
 
   return (
-    <article>
-      <h2>{title}</h2>
-      <button onClick={() => collapse(!collapsed)}>{!collapsed ? '-' : '+'}</button>
-      {!collapsed && <p>{text}</p>}
-    </article>
+    <li>
+      <h2>{article.title}</h2>
+      <button onClick={onToggleClick}>{isOpen ? '-' : '+'}</button>
+      {isOpen && <p>{article.text}</p>}
+    </li>
   )
 }
-
-export const ArticleCollapsible = collapsible(Article)

@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 
-export const collapsible = (WrappedComponent) => (props) => {
-  const [collapsed, collapse] = useState(true)
+export const Accordion = (WrappedComponent) => (props) => {
+  const [openId, toggleOpenId] = useState()
+
+  const expandCollapse = (id) => toggleOpenId(id === openId ? null : id)
 
   return (
     <>
-      <WrappedComponent collapsed={collapsed} collapse={collapse} {...props} />
+      <WrappedComponent openId={openId} toggleOpen={expandCollapse} {...props} />
     </>
   )
 }

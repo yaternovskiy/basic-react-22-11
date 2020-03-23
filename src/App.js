@@ -3,12 +3,14 @@ import React, { Component } from 'react'
 import { Filter } from './components/filter'
 import { ArticleListCollapsible } from './components/article-list'
 
+import articles from './fixtures'
+
 class App extends Component {
   render() {
     return (
       <>
         <Filter />
-        <ArticleListCollapsible></ArticleListCollapsible>
+        <ArticleListCollapsible articles={articles}></ArticleListCollapsible>
       </>
     )
   }
