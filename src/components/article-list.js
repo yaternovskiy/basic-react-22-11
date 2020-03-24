@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import { Article } from './article'
 import { Accordion } from '../decorators/accordion'
@@ -25,5 +26,9 @@ const renderList = (props) => {
 }
 
 const ArticleList = (props) => renderList(props)
+
+ArticleList.propTypes = {
+  props: PropTypes.shape()
+}
 
 export const ArticleListCollapsible = Accordion(ArticleList)

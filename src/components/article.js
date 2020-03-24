@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
 import { Comments } from './comments'
 
 export const Article = (props) => {
@@ -8,10 +10,14 @@ export const Article = (props) => {
     toggleOpen(article.id)
   }
 
+  const buttonText = isOpen ? '-' : '+'
+
   return (
-    <li>
+    <li className="article-list__item">
       <h2>{article.title}</h2>
-      <button onClick={onToggleClick}>{isOpen ? '-' : '+'}</button>
+      <button data-test-expand-article="true" onClick={onToggleClick}>
+        {buttonText}
+      </button>
       {isOpen && (
         <>
           <p>{article.text}</p>
@@ -20,4 +26,10 @@ export const Article = (props) => {
       )}
     </li>
   )
+}
+
+Article.propTypes = {
+  article: PropTypes.shape(),
+  isOpen: PropTypes.bool,
+  toggleOpen: PropTypes.func
 }
