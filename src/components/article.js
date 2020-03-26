@@ -1,14 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Comments } from './comments'
+import { CommentsConnected } from './comments'
 
 export const Article = (props) => {
-  const { article, isOpen, toggleOpen } = props
+  const { article, isOpen, toggleOpen, addComment, store } = props
 
   const onToggleClick = () => {
     toggleOpen(article.id)
   }
+
+  const onAddComment = () => addComment(article.id)
 
   const buttonText = isOpen ? '-' : '+'
 
@@ -21,7 +23,9 @@ export const Article = (props) => {
       {isOpen && (
         <>
           <p>{article.text}</p>
-          <Comments id={1} comments={article.comments} />
+          <CommentsConnected id={1} store={store} commentIds={article.commentsIds} />
+
+          <button onClick={onAddComment}>ADD</button>
         </>
       )}
     </li>

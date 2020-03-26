@@ -2,31 +2,28 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
+import { getFilteredArticles } from '../store/selectors'
+import { addNewComment } from '../store/actionCreators'
+
 import { Article } from './article'
 import { Accordion } from '../decorators/accordion'
 
 const renderList = (props) => {
-  const { openId, toggleOpen, articles, startDate, endDate } = props
-
-  const articlesFiltered = articles.filter((article) => {
-    const articleDate = new Date(article.date)
-
-    return (
-      (startDate ? articleDate >= startDate : true) && (endDate ? articleDate <= endDate : true)
-    )
-  })
+  const { openId, toggleOpen, articles = [], addComment, store } = props
 
   return (
     <div className="article-list">
       <h1>Articles</h1>
       <ul>
-        {articlesFiltered.map((article) => (
+        {Object.values(articles).map((article) => (
           <Article
             key={article.id}
+            store={store}
             article={article}
             id={article.id}
             isOpen={openId === article.id}
             toggleOpen={toggleOpen}
+            addComment={addComment}
           />
         ))}
       </ul>
@@ -36,15 +33,19 @@ const renderList = (props) => {
 
 const ArticleList = (props) => renderList(props)
 
-const mapStateToProps = (state) => {
-  return {
-    startDate: state.filter.dateFrom,
-    endDate: state.filter.dateTill
-  }
-}
+const mapStateToProps = (state) => ({
+  articles: getFilteredArticles(state)
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  addComment: (articleId) => dispatch(addNewComment(articleId))
+})
 
 ArticleList.propTypes = {
   props: PropTypes.shape()
 }
 
-export const ArticleListCollapsible = connect(mapStateToProps)(Accordion(ArticleList))
+export const ArticleListCollapsible = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Accordion(ArticleList))

@@ -9,8 +9,8 @@ Enzyme.configure({ adapter: new Adapter() })
 
 const firstArticle = Object.values(articles)[0]
 
-const articleButtonSelector = '[data-test-expand-article]';
-const commentsButtonSelector = '[data-test-show-comments]';
+const articleButtonSelector = '[data-test-expand-article]'
+const commentsButtonSelector = '[data-test-show-comments]'
 
 describe('Article', () => {
   it('renders an `Article`', () => {
@@ -19,12 +19,23 @@ describe('Article', () => {
   })
 
   it('renders button and takes click event', () => {
-    let wasCalled = false;
-    const wrapper = shallow(<Article article={firstArticle} isOpen toggleOpen={() => {wasCalled = true}} />)
-    
+    let wasCalled = false
+    const wrapper = shallow(
+      <Article
+        article={firstArticle}
+        isOpen
+        toggleOpen={() => {
+          wasCalled = true
+        }}
+      />
+    )
+
     expect(wrapper.find(articleButtonSelector).length).toEqual(1)
-    
-    wrapper.find(articleButtonSelector).at(0).simulate('click')
+
+    wrapper
+      .find(articleButtonSelector)
+      .at(0)
+      .simulate('click')
     expect(wasCalled).toBe(true)
   })
 

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { getCommentsByIds } from '../store/selectors'
 
 const renderComments = (comments) => {
   return (
@@ -42,3 +44,11 @@ Comment.PropTypes = {
 Comment.defaultProps = {
   comments: []
 }
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    comments: getCommentsByIds(state, ownProps.commentIds)
+  }
+}
+
+export const CommentsConnected = connect(mapStateToProps)(Comments)
