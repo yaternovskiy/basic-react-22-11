@@ -38,7 +38,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  addComment: (articleId) => dispatch(addNewComment(articleId))
+  addComment: (options) => dispatch(addNewComment(options))
 })
 
 ArticleList.propTypes = {

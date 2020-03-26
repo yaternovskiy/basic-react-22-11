@@ -28,13 +28,13 @@ export const articlesReducer = (articles = {}, action) => {
         ...action.payload
       }
     case 'ADD_COMMENT':
-      const currentComments = articles[action.payload.articleId].commentsIds
+      const id = action.payload.options.articleId
 
       return {
         ...articles,
-        [action.payload.articleId]: {
-          ...articles[action.payload.articleId],
-          commentsIds: [...currentComments, action.payload.randomId]
+        [id]: {
+          ...articles[id],
+          commentsIds: (articles[id].commentsIds || []).concat(action.payload.randomId)
         }
       }
     default:
@@ -53,7 +53,7 @@ export const commentsReducer = (comments = {}, action) => {
       return {
         ...comments,
         [action.payload.randomId]: {
-          ...action.payload,
+          ...action.payload.options,
           id: action.payload.randomId
         }
       }

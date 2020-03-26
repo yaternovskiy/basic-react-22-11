@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { CommentsConnected } from './comments'
+import { CommentForm } from './comment-form'
 
 export const Article = (props) => {
   const { article, isOpen, toggleOpen, addComment, store } = props
@@ -10,7 +11,9 @@ export const Article = (props) => {
     toggleOpen(article.id)
   }
 
-  const onAddComment = () => addComment(article.id)
+  const onAddComment = (options) => {
+    addComment({ ...options, articleId: article.id })
+  }
 
   const buttonText = isOpen ? '-' : '+'
 
@@ -25,7 +28,8 @@ export const Article = (props) => {
           <p>{article.text}</p>
           <CommentsConnected id={1} store={store} commentIds={article.commentsIds} />
 
-          <button onClick={onAddComment}>ADD</button>
+          {/* <button onClick={onAddComment}>ADD</button> */}
+          <CommentForm addComment={onAddComment} articleId={article.id}></CommentForm>
         </>
       )}
     </li>
