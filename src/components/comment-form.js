@@ -6,8 +6,13 @@ import { addNewComment } from '../store/actionCreators'
 export const CommentForm = (props) => {
   const { articleId, addComment } = props
 
-  const [user, setUser] = useState('')
-  const [text, setText] = useState('')
+  const handleInput = (type) => {
+    const [value, setValue] = useState('')
+    return [value, setValue]
+  }
+
+  const [user, setUser] = handleInput('user')
+  const [text, setText] = handleInput('text')
 
   const addNew = (e) => {
     e.preventDefault()
