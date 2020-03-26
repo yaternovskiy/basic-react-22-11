@@ -3,13 +3,12 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import { getFilteredArticles } from '../store/selectors'
-import { addNewComment } from '../store/actionCreators'
 
 import { Article } from './article'
 import { Accordion } from '../decorators/accordion'
 
 const renderList = (props) => {
-  const { openId, toggleOpen, articles = [], addComment, store } = props
+  const { openId, toggleOpen, articles = [], store } = props
 
   return (
     <div className="article-list">
@@ -23,7 +22,6 @@ const renderList = (props) => {
             id={article.id}
             isOpen={openId === article.id}
             toggleOpen={toggleOpen}
-            addComment={addComment}
           />
         ))}
       </ul>
@@ -37,15 +35,8 @@ const mapStateToProps = (state) => ({
   articles: getFilteredArticles(state)
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  addComment: (options) => dispatch(addNewComment(options))
-})
-
 ArticleList.propTypes = {
   props: PropTypes.shape()
 }
 
-export const ArticleListCollapsible = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Accordion(ArticleList))
+export const ArticleListCollapsible = connect(mapStateToProps)(Accordion(ArticleList))

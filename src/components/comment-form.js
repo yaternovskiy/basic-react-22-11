@@ -1,23 +1,42 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
+
+import { addNewComment } from '../store/actionCreators'
 
 export const CommentForm = (props) => {
-  const { addComment, articleId } = props
+  const { articleId, addComment } = props
+
+  const [user, setUser] = useState('')
+  const [text, setText] = useState('')
 
   const addNew = (e) => {
     e.preventDefault()
-    const user = e.target[0].value
-    const text = e.target[1].value
+    addComment({ articleId, user, text })
+    setUser('')
+    setText('')
+  }
 
-    addComment({ user, text })
+  const onInputUser = (e) => {
+    setUser(e.currentTarget.value)
+  }
+
+  const onInputText = (e) => {
+    setText(e.currentTarget.value)
   }
 
   return (
     <form onSubmit={addNew}>
       <label for={`name-${articleId}`}>Name</label>
-      <input id={`name-${articleId}`} type="text"></input>
+      <input id={`name-${articleId}`} type="text" onInput={onInputUser} value={user}></input>
       <label for={`comment-${articleId}`}>Comment</label>
-      <textarea id={`comment-${articleId}`}></textarea>
+      <textarea id={`comment-${articleId}`} onInput={onInputText} value={text}></textarea>
       <button type="submit">Add</button>
     </form>
   )
 }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addComment: (options) => dispatch(addNewComment(options))
+  }
+}
+export const NewCommentForm = connect(null, mapDispatchToProps)(CommentForm)
