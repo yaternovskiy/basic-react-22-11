@@ -1,10 +1,15 @@
-export const getNormalizedData = (data) => {
-  const result = {}
+import { normalize, schema } from 'normalizr'
 
-  data.forEach((datum) => {
-    result[datum.id] = generateNormalizedRecord(datum)
+export const getNormalizedData = (data) => {
+  const commentSchema = new schema.Entity('comments')
+
+  const articleSchema = new schema.Entity('articles', {
+    comments: [commentSchema]
   })
-  return result
+
+  const articlesArray = [articleSchema]
+
+  return normalize(data, articlesArray).entities
 }
 
 const generateNormalizedRecord = (datum) => {

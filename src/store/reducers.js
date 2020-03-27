@@ -43,7 +43,7 @@ export const articlesReducer = (articles = {}, action) => {
         ...articles,
         [id]: {
           ...articles[id],
-          commentsIds: (articles[id].commentsIds || []).concat(action.payload.randomId)
+          comments: (articles[id].comments || []).concat(action.payload.randomId)
         }
       }
     default:

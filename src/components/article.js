@@ -22,7 +22,7 @@ export const Article = (props) => {
       {isOpen && (
         <>
           <p>{article.text}</p>
-          <CommentsConnected id={1} store={store} commentIds={article.commentsIds} />
+          <CommentsConnected id={1} store={store} commentIds={article.comments} />
 
           {/* <button onClick={onAddComment}>ADD</button> */}
           <NewCommentForm articleId={article.id} store={store}></NewCommentForm>
