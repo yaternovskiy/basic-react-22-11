@@ -1,4 +1,11 @@
-import { generateId, generateSentence, generateParagraph } from '../helpers/generate-hash'
+import {
+  generateId,
+  generateDateTime,
+  generateUsername,
+  generateSentence
+} from '../helpers/generate'
+
+import { ADD_COMMENT } from '../constants/action-types'
 
 export const logger = (store) => (next) => (action) => {
   console.log('dispatching', action)
@@ -25,14 +32,33 @@ export const randomId = (store) => (next) => (action) => {
 }
 
 export const randomComment = (store) => (next) => (action) => {
-  if (!action.generateComment) return next(action)
+  switch (action.type) {
+    case ADD_COMMENT:
+      if (action.generateComment)
+        return next({
+          ...action,
+          payload: {
+            ...action.payload,
+            user: generateUsername(),
+            text: generateSentence()
+          }
+        })
+    default:
+      return next(action)
+  }
+}
 
-  next({
-    ...action,
-    payload: {
-      ...action.payload,
-      user: generateSentence(),
-      text: generateParagraph()
-    }
-  })
+export const addDate = (store) => (next) => (action) => {
+  switch (action.type) {
+    case ADD_COMMENT:
+      return next({
+        ...action,
+        payload: {
+          ...action.payload,
+          date: generateDateTime()
+        }
+      })
+    default:
+      return next(action)
+  }
 }

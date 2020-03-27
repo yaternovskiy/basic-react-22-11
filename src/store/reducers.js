@@ -1,3 +1,12 @@
+import {
+  ADD_ARTICLE,
+  ADD_COMMENT,
+  POPULATE_ARTICLES,
+  POPULATE_COMMENTS,
+  SET_FILTER_DATE_FROM,
+  SET_FILTER_DATE_TILL
+} from '../constants/action-types'
+
 const defaultFilter = {
   fromDate: '',
   tillDate: ''
@@ -5,12 +14,12 @@ const defaultFilter = {
 
 export const filterReducer = (filter = defaultFilter, action) => {
   switch (action.type) {
-    case 'DATE_FROM':
+    case SET_FILTER_DATE_FROM:
       return {
         ...filter,
         dateFrom: action.payload
       }
-    case 'DATE_TILL':
+    case SET_FILTER_DATE_TILL:
       return {
         ...filter,
         dateTill: action.payload
@@ -22,13 +31,13 @@ export const filterReducer = (filter = defaultFilter, action) => {
 
 export const articlesReducer = (articles = {}, action) => {
   switch (action.type) {
-    case 'ADD_ARTICLES':
+    case POPULATE_ARTICLES:
       return {
         ...articles,
         ...action.payload
       }
-    case 'ADD_COMMENT':
-      const id = action.payload.options.articleId
+    case ADD_COMMENT:
+      const id = action.payload.articleId
 
       return {
         ...articles,
@@ -44,16 +53,16 @@ export const articlesReducer = (articles = {}, action) => {
 
 export const commentsReducer = (comments = {}, action) => {
   switch (action.type) {
-    case 'ADD_COMMENTS':
+    case POPULATE_COMMENTS:
       return {
         ...comments,
         ...action.payload
       }
-    case 'ADD_COMMENT':
+    case ADD_COMMENT:
       return {
         ...comments,
         [action.payload.randomId]: {
-          ...action.payload.options,
+          ...action.payload,
           id: action.payload.randomId
         }
       }
