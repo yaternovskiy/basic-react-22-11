@@ -1,4 +1,5 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import thunk from 'redux-thunk'
 
 import { POPULATE_ARTICLES, POPULATE_COMMENTS } from '../constants/action-types'
 import { getNormalizedData } from '../helpers/normalizer'
@@ -19,7 +20,7 @@ const composeEnhancers =
     : compose
 
 const enhancer = composeEnhancers(
-  applyMiddleware(logger, errorLogger, randomId, randomComment, addDate)
+  applyMiddleware(thunk, logger, errorLogger, randomId, randomComment, addDate)
 )
 
 let store = createStore(combinedReducer, enhancer)

@@ -17,10 +17,29 @@ export const addNewAutoComment = (payload) => {
   }
 }
 
-export const addNewComment = (payload) => {
+export const addNewComment = (comment) => {
   return {
     type: ADD_COMMENT,
-    payload,
+    payload: comment,
     generateId: true
   }
 }
+
+const MODERATION_TIMEOUT = 1000
+
+export const moderateAsync = (payload) => (dispatch) =>
+  setTimeout(() => {
+    return new Promise((resolve, reject) => {
+      const dice = Math.floor(Math.random() * 10) - 5
+
+      dice > 0 ? resolve() : reject()
+    }).then(
+      () => {
+        console.log('Moderation accept')
+        return dispatch(addNewAutoComment(payload))
+      },
+      () => {
+        console.log('Moderation reject')
+      }
+    )
+  }, MODERATION_TIMEOUT)

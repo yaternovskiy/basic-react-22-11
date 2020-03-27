@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
-import { addNewComment, addNewAutoComment } from '../store/actionCreators'
+import { addNewComment, moderateAsync } from '../store/actionCreators'
 
 export const CommentForm = (props) => {
   const { articleId, addComment, addRandomComment } = props
@@ -41,7 +41,7 @@ export const CommentForm = (props) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     addComment: (options) => dispatch(addNewComment(options)),
-    addRandomComment: (options) => dispatch(addNewAutoComment(options))
+    addRandomComment: (options) => dispatch(moderateAsync(options))
   }
 }
 
