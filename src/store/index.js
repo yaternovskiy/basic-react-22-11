@@ -5,7 +5,7 @@ import { getNormalizedData } from '../helpers/normalizer'
 import articles from '../fixtures'
 
 import { filterReducer, articlesReducer, commentsReducer } from './reducers'
-import { logger, randomId, randomComment, addDate } from './middlwares'
+import { logger, randomId, randomComment, addDate, errorLogger } from './middlwares'
 
 const combinedReducer = combineReducers({
   filter: filterReducer,
@@ -18,7 +18,9 @@ const composeEnhancers =
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
     : compose
 
-const enhancer = composeEnhancers(applyMiddleware(logger, randomId, randomComment, addDate))
+const enhancer = composeEnhancers(
+  applyMiddleware(logger, errorLogger, randomId, randomComment, addDate)
+)
 
 let store = createStore(combinedReducer, enhancer)
 

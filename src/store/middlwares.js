@@ -62,3 +62,11 @@ export const addDate = (store) => (next) => (action) => {
       return next(action)
   }
 }
+
+export const errorLogger = (store) => (next) => (action) => {
+  try {
+    next(action)
+  } catch (e) {
+    console.error(`Error: ${e};`, { state: store.getState(), action })
+  }
+}
