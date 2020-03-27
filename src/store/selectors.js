@@ -18,5 +18,7 @@ export const getFilteredArticles = createSelector(getArticles, getFilter, (artic
 export const getCommentsByIds = createSelector(
   (state, ids) => ids,
   (state) => state.comments,
-  (ids, allComments) => Object.values(allComments).filter((comment) => ids.indexOf(comment.id) >= 0)
+  (ids, allComments) =>
+    (ids && Object.values(allComments).filter((comment) => ids.indexOf(comment.id) >= 0)) ||
+    undefined
 )

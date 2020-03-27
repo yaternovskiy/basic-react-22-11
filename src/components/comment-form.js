@@ -6,13 +6,8 @@ import { addNewComment } from '../store/actionCreators'
 export const CommentForm = (props) => {
   const { articleId, addComment } = props
 
-  const handleInput = (type) => {
-    const [value, setValue] = useState('')
-    return [value, setValue]
-  }
-
-  const [user, setUser] = handleInput('user')
-  const [text, setText] = handleInput('text')
+  const [user, setUser] = useState('')
+  const [text, setText] = useState('')
 
   const addNew = (e) => {
     e.preventDefault()
@@ -39,9 +34,11 @@ export const CommentForm = (props) => {
     </form>
   )
 }
+
 const mapDispatchToProps = (dispatch) => {
   return {
     addComment: (options) => dispatch(addNewComment(options))
   }
 }
+
 export const NewCommentForm = connect(null, mapDispatchToProps)(CommentForm)
