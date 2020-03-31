@@ -1,9 +1,16 @@
+import { fromJS, Map } from 'immutable'
+
 import {
   SET_FILTER_DATE_FROM,
   SET_FILTER_DATE_TILL,
   ADD_COMMENT,
-  DELETE_ARTICLE
+  DELETE_ARTICLE,
+  POPULATE_ARTICLES,
+  POPULATE_COMMENTS,
+  SET_FETCH_STATUS
 } from '../constants/action-types'
+
+import { FETCH_STATUS_KEY, FETCH_STATUS } from '../constants/index'
 
 export const setFilterDateFrom = (date) => {
   return { type: SET_FILTER_DATE_FROM, payload: date }
@@ -53,3 +60,49 @@ export const moderateAsync = (payload) => (dispatch) =>
       }
     )
   }, MODERATION_TIMEOUT)
+
+const createSetFetchStatusActionCreator = (key, status) => ({
+  type: SET_FETCH_STATUS,
+  payload: new Map({
+    key,
+    status
+  })
+})
+
+export const setFetchArticlesStatus = (status) =>
+  createSetFetchStatusActionCreator(FETCH_STATUS_KEY.ARTICLE, status)
+
+export const setFetchCommentsStatus = (status) =>
+  createSetFetchStatusActionCreator(FETCH_STATUS_KEY.COMMENT, status)
+
+export const fetchArticles = (payload) => (dispatch) => {
+  dispatch(setFetchArticlesStatus(FETCH_STATUS.REQUEST))
+
+  return fetch('/api/article')
+    .then((response) => response.json())
+    .then(
+      (response) => {
+        const data = {}
+        response.forEach((datum) => (data[datum.id] = datum))
+        dispatch({ type: POPULATE_ARTICLES, payload: fromJS(data) })
+        dispatch(setFetchArticlesStatus(FETCH_STATUS.SUCCESS))
+      },
+      (error) => dispatch(setFetchArticlesStatus(FETCH_STATUS.ERROR))
+    )
+}
+
+export const fetchArticleComments = (payload) => (dispatch) => {
+  dispatch(setFetchCommentsStatus(FETCH_STATUS.REQUEST))
+
+  return fetch(`/api/comment?article=${payload.articleId}`)
+    .then((response) => response.json())
+    .then(
+      (response) => {
+        const data = {}
+        response.forEach((datum) => (data[datum.id] = datum))
+        dispatch({ type: POPULATE_COMMENTS, payload: fromJS(data) })
+        dispatch(setFetchCommentsStatus(FETCH_STATUS.SUCCESS))
+      },
+      (error) => dispatch(setFetchCommentsStatus(FETCH_STATUS.ERROR))
+    )
+}

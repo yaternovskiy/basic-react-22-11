@@ -7,8 +7,11 @@ import {
   POPULATE_COMMENTS,
   SET_FILTER_DATE_FROM,
   SET_FILTER_DATE_TILL,
-  DELETE_ARTICLE
+  DELETE_ARTICLE,
+  SET_FETCH_STATUS
 } from '../constants/action-types'
+
+import { FETCH_STATUS_KEY } from '../constants/index'
 
 const defaultFilter = {
   fromDate: '',
@@ -65,5 +68,16 @@ export const commentsReducer = (comments = new Map({}), action) => {
 
     default:
       return comments
+  }
+}
+
+export const fetchDataStatusReducer = (state = Map({}), action) => {
+  const { type, payload } = action
+
+  switch (type) {
+    case SET_FETCH_STATUS:
+      return state.set(payload.get('key'), payload.get('status'))
+    default:
+      return state
   }
 }

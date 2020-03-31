@@ -1,11 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import { CommentsConnected } from './comments'
 import { NewCommentForm } from './comment-form'
 
 export const Article = (props) => {
-  const { article, isOpen, toggleOpen, deleteArticle, store } = props
+  const { article, isOpen, toggleOpen, deleteArticle, store, fetchArticleComments } = props
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchArticleComments(article.get('id'))
+    }
+  }, [isOpen])
 
   const onToggleClick = () => {
     toggleOpen(article.get('id'))

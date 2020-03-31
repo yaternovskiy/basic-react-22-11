@@ -1,6 +1,8 @@
 import { Immutable } from 'immutable'
 import { createSelector } from 'reselect'
 
+import { FETCH_STATUS_KEY, FETCH_STATUS } from '../constants/index'
+
 const getFilter = (state) => state.filter
 
 const getArticles = (state) => state.articles
@@ -22,3 +24,6 @@ export const getCommentsByIds = createSelector(
   (ids, allComments) =>
     (ids && allComments.filter((comment) => ids.indexOf(comment.get('id')) >= 0)) || undefined
 )
+
+export const getArticlesStatus = (state) => state.fetchStatus.get(FETCH_STATUS_KEY.ARTICLE)
+export const getCommentsStatus = (state) => state.fetchStatus.get(FETCH_STATUS_KEY.COMMENT)

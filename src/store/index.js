@@ -5,13 +5,14 @@ import { POPULATE_ARTICLES, POPULATE_COMMENTS } from '../constants/action-types'
 import { getNormalizedData } from '../helpers/normalizer'
 import articles from '../fixtures'
 
-import { filterReducer, articlesReducer, commentsReducer } from './reducers'
+import { filterReducer, articlesReducer, commentsReducer, fetchDataStatusReducer } from './reducers'
 import { logger, randomId, randomComment, addDate, errorLogger } from './middlwares'
 
 const combinedReducer = combineReducers({
   filter: filterReducer,
   articles: articlesReducer,
-  comments: commentsReducer
+  comments: commentsReducer,
+  fetchStatus: fetchDataStatusReducer
 })
 
 const composeEnhancers =
@@ -37,6 +38,6 @@ const loadInitialData = (store) => {
   })
 }
 
-loadInitialData(store)
+//loadInitialData(store)
 
 export default store

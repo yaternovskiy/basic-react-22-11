@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { getCommentsByIds } from '../store/selectors'
+import { getCommentsByIds, getCommentsStatus } from '../store/selectors'
+import { Loader } from './loader'
+import { FETCH_STATUS } from '../constants'
 
 const renderComments = (comments) => {
   return (
@@ -19,20 +21,28 @@ const renderComments = (comments) => {
 }
 
 export const Comments = (props) => {
-  const { comments } = props
+  const { comments, fetchingStatus } = props
 
-  const [isOpen, toggleOpen] = useState()
+  const [isOpen, toggleOpen] = useState(true)
 
   const expandCollapse = () => toggleOpen(!isOpen)
 
   const buttonText = isOpen ? 'close comment' : 'open comments'
 
+  const isLoading = fetchingStatus === FETCH_STATUS.REQUEST
+
   return (
     <div>
-      <button data-test-show-comments="true" onClick={expandCollapse}>
-        {buttonText}
-      </button>
-      <ul>{isOpen && renderComments(comments)}</ul>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <button data-test-show-comments="true" onClick={expandCollapse}>
+            {buttonText}
+          </button>
+          <ul>{isOpen && renderComments(comments)}</ul>
+        </>
+      )}
     </div>
   )
 }
@@ -47,7 +57,8 @@ Comment.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    comments: getCommentsByIds(state, ownProps.commentIds)
+    comments: getCommentsByIds(state, ownProps.commentIds),
+    fetchingStatus: getCommentsStatus(state)
   }
 }
 
