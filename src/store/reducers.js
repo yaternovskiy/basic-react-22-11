@@ -1,10 +1,13 @@
+import { Map, List, fromJS } from 'immutable'
+
 import {
   ADD_ARTICLE,
   ADD_COMMENT,
   POPULATE_ARTICLES,
   POPULATE_COMMENTS,
   SET_FILTER_DATE_FROM,
-  SET_FILTER_DATE_TILL
+  SET_FILTER_DATE_TILL,
+  DELETE_ARTICLE
 } from '../constants/action-types'
 
 const defaultFilter = {
@@ -29,43 +32,37 @@ export const filterReducer = (filter = defaultFilter, action) => {
   }
 }
 
-export const articlesReducer = (articles = {}, action) => {
-  switch (action.type) {
-    case POPULATE_ARTICLES:
-      return {
-        ...articles,
-        ...action.payload
-      }
-    case ADD_COMMENT:
-      const id = action.payload.articleId
+export const articlesReducer = (articles = new Map({}), action) => {
+  const { type, payload } = action
 
-      return {
-        ...articles,
-        [id]: {
-          ...articles[id],
-          comments: (articles[id].comments || []).concat(action.payload.randomId)
-        }
-      }
+  switch (type) {
+    case POPULATE_ARTICLES:
+      return articles.merge(payload)
+
+    case DELETE_ARTICLE:
+      return articles.delete(payload.articleId)
+
+    case ADD_COMMENT:
+      const id = payload.articleId
+      return articles.updateIn([id, 'comments'], (comments) =>
+        (comments || new List()).concat(payload.randomId)
+      )
+
     default:
       return articles
   }
 }
 
-export const commentsReducer = (comments = {}, action) => {
-  switch (action.type) {
+export const commentsReducer = (comments = new Map({}), action) => {
+  const { type, payload } = action
+
+  switch (type) {
     case POPULATE_COMMENTS:
-      return {
-        ...comments,
-        ...action.payload
-      }
+      return comments.merge(payload)
+
     case ADD_COMMENT:
-      return {
-        ...comments,
-        [action.payload.randomId]: {
-          ...action.payload,
-          id: action.payload.randomId
-        }
-      }
+      return comments.set(payload.randomId, fromJS(payload).set('id', payload.randomId))
+
     default:
       return comments
   }

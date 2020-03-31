@@ -6,11 +6,11 @@ import { getCommentsByIds } from '../store/selectors'
 const renderComments = (comments) => {
   return (
     <>
-      {comments && comments.length
-        ? comments.map((comment) => (
-            <li key={comment.id}>
-              <h4 data-test="comment username">{comment.user}</h4>
-              <p>{comment.text}</p>
+      {comments
+        ? comments.valueSeq().map((comment) => (
+            <li key={comment.get('id')}>
+              <h4 data-test="comment username">{comment.get('user')}</h4>
+              <p>{comment.get('text')}</p>
             </li>
           ))
         : null}

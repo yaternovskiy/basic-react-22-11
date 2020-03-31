@@ -4,24 +4,27 @@ import PropTypes from 'prop-types'
 
 import { getFilteredArticles } from '../store/selectors'
 
+import { deleteArticle } from '../store/actionCreators'
+
 import { Article } from './article'
 import { Accordion } from '../decorators/accordion'
 
 const renderList = (props) => {
-  const { openId, toggleOpen, articles = [], store } = props
+  const { openId, toggleOpen, articles = [], deleteArticle, store } = props
 
   return (
     <div className="article-list">
       <h1>Articles</h1>
       <ul>
-        {Object.values(articles).map((article) => (
+        {articles.valueSeq().map((article) => (
           <Article
-            key={article.id}
+            key={article.get('id')}
             store={store}
             article={article}
-            id={article.id}
-            isOpen={openId === article.id}
+            id={article.get('id')}
+            isOpen={openId === article.get('id')}
             toggleOpen={toggleOpen}
+            deleteArticle={deleteArticle}
           />
         ))}
       </ul>
@@ -35,8 +38,13 @@ const mapStateToProps = (state) => ({
   articles: getFilteredArticles(state)
 })
 
+const mapDispatchToProps = (dispatch) => ({ deleteArticle: (id) => dispatch(deleteArticle(id)) })
+
 ArticleList.propTypes = {
   props: PropTypes.shape()
 }
 
-export const ArticleListCollapsible = connect(mapStateToProps)(Accordion(ArticleList))
+export const ArticleListCollapsible = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Accordion(ArticleList))

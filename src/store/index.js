@@ -28,11 +28,11 @@ let store = createStore(combinedReducer, enhancer)
 const loadInitialData = (store) => {
   const normalizedData = getNormalizedData(articles)
 
-  store.dispatch({ type: POPULATE_ARTICLES, payload: normalizedData.articles })
+  store.dispatch({ type: POPULATE_ARTICLES, payload: normalizedData.get('articles') })
 
   articles.forEach((article) => {
     if (article.comments) {
-      store.dispatch({ type: POPULATE_COMMENTS, payload: normalizedData.comments })
+      store.dispatch({ type: POPULATE_COMMENTS, payload: normalizedData.get('comments') })
     }
   })
 }

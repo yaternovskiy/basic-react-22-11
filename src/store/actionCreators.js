@@ -1,4 +1,9 @@
-import { SET_FILTER_DATE_FROM, SET_FILTER_DATE_TILL, ADD_COMMENT } from '../constants/action-types'
+import {
+  SET_FILTER_DATE_FROM,
+  SET_FILTER_DATE_TILL,
+  ADD_COMMENT,
+  DELETE_ARTICLE
+} from '../constants/action-types'
 
 export const setFilterDateFrom = (date) => {
   return { type: SET_FILTER_DATE_FROM, payload: date }
@@ -24,6 +29,11 @@ export const addNewComment = (comment) => {
     generateId: true
   }
 }
+
+export const deleteArticle = (id) => ({
+  type: DELETE_ARTICLE,
+  payload: { articleId: id }
+})
 
 const MODERATION_TIMEOUT = 1000
 

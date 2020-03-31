@@ -1,3 +1,4 @@
+import { fromJS } from 'immutable'
 import { normalize, schema } from 'normalizr'
 
 export const getNormalizedData = (data) => {
@@ -9,7 +10,7 @@ export const getNormalizedData = (data) => {
 
   const articlesArray = [articleSchema]
 
-  return normalize(data, articlesArray).entities
+  return fromJS(normalize(data, articlesArray).entities)
 }
 
 const generateNormalizedRecord = (datum) => {

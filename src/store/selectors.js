@@ -1,3 +1,4 @@
+import { Immutable } from 'immutable'
 import { createSelector } from 'reselect'
 
 const getFilter = (state) => state.filter
@@ -5,7 +6,7 @@ const getFilter = (state) => state.filter
 const getArticles = (state) => state.articles
 
 export const getFilteredArticles = createSelector(getArticles, getFilter, (articles, filters) => {
-  return Object.values(articles).filter((article) => {
+  return articles.filter((article) => {
     const articleDate = new Date(article.date)
 
     return (
@@ -19,6 +20,5 @@ export const getCommentsByIds = createSelector(
   (state, ids) => ids,
   (state) => state.comments,
   (ids, allComments) =>
-    (ids && Object.values(allComments).filter((comment) => ids.indexOf(comment.id) >= 0)) ||
-    undefined
+    (ids && allComments.filter((comment) => ids.indexOf(comment.get('id')) >= 0)) || undefined
 )
