@@ -8,10 +8,13 @@ import {
   SET_FILTER_DATE_FROM,
   SET_FILTER_DATE_TILL,
   DELETE_ARTICLE,
-  SET_FETCH_STATUS
+  SET_FETCH_STATUS,
+  TYPE_SUCCESS,
+  TYPE_ERROR,
+  TYPE_REQUEST
 } from '../constants/action-types'
 
-import { FETCH_STATUS_KEY } from '../constants/index'
+import { FETCH_STATUS_KEY } from '../constants/store'
 
 const defaultFilter = {
   fromDate: '',
@@ -39,8 +42,11 @@ export const articlesReducer = (articles = new Map({}), action) => {
   const { type, payload } = action
 
   switch (type) {
-    case POPULATE_ARTICLES:
+    case `${POPULATE_ARTICLES}_${TYPE_SUCCESS}`:
       return articles.merge(payload)
+
+    case `${ADD_ARTICLE}_${TYPE_SUCCESS}`:
+      return articles.update(payload.get('id'), () => payload)
 
     case DELETE_ARTICLE:
       return articles.delete(payload.articleId)
@@ -60,7 +66,7 @@ export const commentsReducer = (comments = new Map({}), action) => {
   const { type, payload } = action
 
   switch (type) {
-    case POPULATE_COMMENTS:
+    case `${POPULATE_COMMENTS}_${TYPE_SUCCESS}`:
       return comments.merge(payload)
 
     case ADD_COMMENT:
@@ -71,12 +77,13 @@ export const commentsReducer = (comments = new Map({}), action) => {
   }
 }
 
-export const fetchDataStatusReducer = (state = Map({}), action) => {
+export const globalFetchStatusReducer = (state = Map({}), action) => {
   const { type, payload } = action
 
   switch (type) {
-    case SET_FETCH_STATUS:
-      return state.set(payload.get('key'), payload.get('status'))
+    case POPULATE_ARTICLES:
+      console.log(state)
+      return state.set(type, payload.status)
     default:
       return state
   }

@@ -2,11 +2,19 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { getFilteredArticles, getArticlesStatus } from '../store/selectors'
+import {
+  getFilteredArticles,
+  getStatusArticlesLoaded,
+  getStatusArticleLoaded
+} from '../store/selectors'
 
-import { deleteArticle, fetchArticles, fetchArticleComments } from '../store/actionCreators'
+import {
+  deleteArticle,
+  createFetchAllArticles,
+  createFetchArticleText
+} from '../store/actionCreators'
 
-import { FETCH_STATUS } from '../constants/index'
+//import { FETCH_STATUS } from '../constants/store'
 
 import { Article } from './article'
 import { Loader } from './loader'
@@ -19,20 +27,20 @@ const renderList = (props) => {
     articles,
     deleteArticle,
     store,
-    articlesStatus,
-    fetchArticleComments
+    articlesLoaded,
+    fetchArticleText
   } = props
 
   let isDataFetched = false
 
   useEffect(() => {
-    store.dispatch(fetchArticles())
+    store.dispatch(createFetchAllArticles())
   }, [isDataFetched])
 
   return (
     <div className="article-list">
       <h1>Articles</h1>
-      {articlesStatus === FETCH_STATUS.REQUEST ? (
+      {!articlesLoaded ? (
         <Loader />
       ) : (
         <ul>
@@ -45,7 +53,7 @@ const renderList = (props) => {
               isOpen={openId === article.get('id')}
               toggleOpen={toggleOpen}
               deleteArticle={deleteArticle}
-              fetchArticleComments={fetchArticleComments}
+              fetchArticleText={fetchArticleText}
             />
           ))}
         </ul>
@@ -58,12 +66,12 @@ const ArticleList = (props) => renderList(props)
 
 const mapStateToProps = (state) => ({
   articles: getFilteredArticles(state),
-  articlesStatus: getArticlesStatus(state)
+  articlesLoaded: getStatusArticlesLoaded(state)
 })
 
 const mapDispatchToProps = (dispatch) => ({
   deleteArticle: (id) => dispatch(deleteArticle(id)),
-  fetchArticleComments: (id) => dispatch(fetchArticleComments({ articleId: id }))
+  fetchArticleText: (id) => dispatch(createFetchArticleText(id))
 })
 
 ArticleList.propTypes = {

@@ -1,7 +1,8 @@
 import { Immutable } from 'immutable'
 import { createSelector } from 'reselect'
 
-import { FETCH_STATUS_KEY, FETCH_STATUS } from '../constants/index'
+import { GLOBAL_FETCH_STATUS_KEY, fetchDataStatus } from '../constants/store'
+import { POPULATE_ARTICLES, TYPE_SUCCESS } from '../constants/action-types'
 
 const getFilter = (state) => state.filter
 
@@ -25,5 +26,9 @@ export const getCommentsByIds = createSelector(
     (ids && allComments.filter((comment) => ids.indexOf(comment.get('id')) >= 0)) || undefined
 )
 
-export const getArticlesStatus = (state) => state.fetchStatus.get(FETCH_STATUS_KEY.ARTICLE)
-export const getCommentsStatus = (state) => state.fetchStatus.get(FETCH_STATUS_KEY.COMMENT)
+export const getStatusArticlesLoaded = (state) => {
+  return state[GLOBAL_FETCH_STATUS_KEY].get(POPULATE_ARTICLES) === fetchDataStatus[TYPE_SUCCESS]
+}
+
+export const getStatusArticleCommentLoaded = (state, id) =>
+  state.articles.get(id).get('commentsStatus') === fetchDataStatus[TYPE_SUCCESS]

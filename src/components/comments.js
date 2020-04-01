@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { getCommentsByIds, getCommentsStatus } from '../store/selectors'
+import { getCommentsByIds, getStatusArticleCommentLoaded } from '../store/selectors'
 import { Loader } from './loader'
-import { FETCH_STATUS } from '../constants'
+import { createFetchAllArticleComments } from '../store/actionCreators'
 
 const renderComments = (comments) => {
   return (
@@ -21,15 +21,20 @@ const renderComments = (comments) => {
 }
 
 export const Comments = (props) => {
-  const { comments, fetchingStatus } = props
+  const { comments, articleId, fetchingStatus, fetchComments } = props
 
-  const [isOpen, toggleOpen] = useState(true)
+  const [isOpen, toggleOpen] = useState(false)
+
+  useEffect(() => {
+    if (!isOpen) return
+    fetchComments(articleId)
+  }, [isOpen])
 
   const expandCollapse = () => toggleOpen(!isOpen)
 
-  const buttonText = isOpen ? 'close comment' : 'open comments'
+  const buttonText = isOpen ? 'Hide comments' : 'Show comments'
 
-  const isLoading = fetchingStatus === FETCH_STATUS.REQUEST
+  const isLoading = false
 
   return (
     <div>
@@ -58,8 +63,12 @@ Comment.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   return {
     comments: getCommentsByIds(state, ownProps.commentIds),
-    fetchingStatus: getCommentsStatus(state)
+    fetchingStatus: getStatusArticleCommentLoaded(state, ownProps.articleId)
   }
 }
 
-export const CommentsConnected = connect(mapStateToProps)(Comments)
+const mapDispathToProps = (dispatch) => ({
+  fetchComments: (id) => dispatch(createFetchAllArticleComments(id))
+})
+
+export const CommentsConnected = connect(mapStateToProps, mapDispathToProps)(Comments)

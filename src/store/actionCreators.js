@@ -1,5 +1,7 @@
 import { fromJS, Map } from 'immutable'
 
+import { keyBy } from 'lodash'
+
 import {
   SET_FILTER_DATE_FROM,
   SET_FILTER_DATE_TILL,
@@ -7,10 +9,21 @@ import {
   DELETE_ARTICLE,
   POPULATE_ARTICLES,
   POPULATE_COMMENTS,
-  SET_FETCH_STATUS
+  SET_FETCH_STATUS,
+  TYPE_SUCCESS,
+  TYPE_REQUEST,
+  TYPE_ERROR,
+  ADD_ARTICLE
 } from '../constants/action-types'
 
-import { FETCH_STATUS_KEY, FETCH_STATUS } from '../constants/index'
+import {
+  FETCH_ARTICLES_STATUS_KEY,
+  REQUEST,
+  SUCCESS,
+  ERROR,
+  fetchDataStatus
+} from '../constants/store'
+import { getFetchUrl } from '../helpers/api-helpers'
 
 export const setFilterDateFrom = (date) => {
   return { type: SET_FILTER_DATE_FROM, payload: date }
@@ -61,48 +74,71 @@ export const moderateAsync = (payload) => (dispatch) =>
     )
   }, MODERATION_TIMEOUT)
 
-const createSetFetchStatusActionCreator = (key, status) => ({
-  type: SET_FETCH_STATUS,
-  payload: new Map({
-    key,
-    status
-  })
+const createFetchStatus = (type, status) => ({
+  type,
+  payload: {
+    status: fetchDataStatus[status]
+  }
 })
 
-export const setFetchArticlesStatus = (status) =>
-  createSetFetchStatusActionCreator(FETCH_STATUS_KEY.ARTICLE, status)
+const createFetchStatusRequest = (type) => createFetchStatus(type, TYPE_REQUEST)
+const createFetchStatusSuccess = (type) => createFetchStatus(type, TYPE_SUCCESS)
+const createFetchStatusError = (type) => createFetchStatus(type, TYPE_ERROR)
 
-export const setFetchCommentsStatus = (status) =>
-  createSetFetchStatusActionCreator(FETCH_STATUS_KEY.COMMENT, status)
+export const createFetchAllArticles = (type) =>
+  fetchRecordsToMap({
+    type: POPULATE_ARTICLES
+  })
 
-export const fetchArticles = (payload) => (dispatch) => {
-  dispatch(setFetchArticlesStatus(FETCH_STATUS.REQUEST))
+export const createFetchAllArticleComments = (id) =>
+  fetchRecordsToMap({
+    id,
+    type: POPULATE_COMMENTS
+  })
 
-  return fetch('/api/article')
+const fetchRecordsToMap = (options) => (dispatch) => {
+  const { type, id } = options
+
+  const url = getFetchUrl({ type, id })
+
+  dispatch(createFetchStatusRequest(type))
+
+  return fetch(url)
     .then((response) => response.json())
     .then(
       (response) => {
-        const data = {}
-        response.forEach((datum) => (data[datum.id] = datum))
-        dispatch({ type: POPULATE_ARTICLES, payload: fromJS(data) })
-        dispatch(setFetchArticlesStatus(FETCH_STATUS.SUCCESS))
+        const data = keyBy(response, (article) => article.id)
+        dispatch({ type: `${type}_${TYPE_SUCCESS}`, payload: fromJS(data) })
+        dispatch(createFetchStatusSuccess(type))
       },
-      (error) => dispatch(setFetchArticlesStatus(FETCH_STATUS.ERROR))
+      (error) => dispatch(createFetchStatusError(type))
     )
 }
 
-export const fetchArticleComments = (payload) => (dispatch) => {
-  dispatch(setFetchCommentsStatus(FETCH_STATUS.REQUEST))
+export const createFetchArticleText = (id) =>
+  fetchApiRecord({
+    id,
+    type: ADD_ARTICLE
+  })
 
-  return fetch(`/api/comment?article=${payload.articleId}`)
+const fetchApiRecord = (payload) => (dispatch) => {
+  const { type, id } = payload
+  const url = getFetchUrl({ type, id })
+
+  //dispatch(createFetchRecordStatusRequest(payload))
+
+  return fetch(url)
     .then((response) => response.json())
     .then(
       (response) => {
-        const data = {}
-        response.forEach((datum) => (data[datum.id] = datum))
-        dispatch({ type: POPULATE_COMMENTS, payload: fromJS(data) })
-        dispatch(setFetchCommentsStatus(FETCH_STATUS.SUCCESS))
+        dispatch({
+          type: `${type}_${TYPE_SUCCESS}`,
+          payload: fromJS({
+            ...response,
+            status: fetchDataStatus[TYPE_SUCCESS]
+          })
+        })
       },
-      (error) => dispatch(setFetchCommentsStatus(FETCH_STATUS.ERROR))
+      (error) => {} //dispatch(createFetchStatusError(type))
     )
 }

@@ -1,18 +1,20 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 
-import { POPULATE_ARTICLES, POPULATE_COMMENTS } from '../constants/action-types'
-import { getNormalizedData } from '../helpers/normalizer'
-import articles from '../fixtures'
-
-import { filterReducer, articlesReducer, commentsReducer, fetchDataStatusReducer } from './reducers'
+import {
+  filterReducer,
+  articlesReducer,
+  commentsReducer,
+  globalFetchStatusReducer
+} from './reducers'
 import { logger, randomId, randomComment, addDate, errorLogger } from './middlwares'
+import { GLOBAL_FETCH_STATUS_KEY } from '../constants/store'
 
 const combinedReducer = combineReducers({
   filter: filterReducer,
   articles: articlesReducer,
   comments: commentsReducer,
-  fetchStatus: fetchDataStatusReducer
+  [GLOBAL_FETCH_STATUS_KEY]: globalFetchStatusReducer
 })
 
 const composeEnhancers =
@@ -26,17 +28,17 @@ const enhancer = composeEnhancers(
 
 let store = createStore(combinedReducer, enhancer)
 
-const loadInitialData = (store) => {
-  const normalizedData = getNormalizedData(articles)
+// const loadInitialData = (store) => {
+//   const normalizedData = getNormalizedData(articles)
 
-  store.dispatch({ type: POPULATE_ARTICLES, payload: normalizedData.get('articles') })
+//   store.dispatch({ type: POPULATE_ARTICLES, payload: normalizedData.get('articles') })
 
-  articles.forEach((article) => {
-    if (article.comments) {
-      store.dispatch({ type: POPULATE_COMMENTS, payload: normalizedData.get('comments') })
-    }
-  })
-}
+//   articles.forEach((article) => {
+//     if (article.comments) {
+//       store.dispatch({ type: POPULATE_COMMENTS, payload: normalizedData.get('comments') })
+//     }
+//   })
+// }
 
 //loadInitialData(store)
 
