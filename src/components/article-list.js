@@ -2,11 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import {
-  getFilteredArticles,
-  getStatusArticlesLoaded,
-  getStatusArticleLoaded
-} from '../store/selectors'
+import { getFilteredArticles, getStatusArticlesLoaded } from '../store/selectors'
 
 import {
   deleteArticle,

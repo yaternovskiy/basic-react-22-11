@@ -11,17 +11,17 @@ export const Article = (props) => {
   const { article, isOpen, toggleOpen, deleteArticle, store, fetchArticleText } = props
 
   useEffect(() => {
-    if (isOpen && article.get('status') !== fetchDataStatus[TYPE_SUCCESS]) {
-      fetchArticleText(article.get('id'))
+    if (isOpen && article.status !== fetchDataStatus[TYPE_SUCCESS]) {
+      fetchArticleText(article.id)
     }
   }, [isOpen])
 
   const onToggleClick = () => {
-    toggleOpen(article.get('id'))
+    toggleOpen(article.id)
   }
 
   const onDeleteClick = () => {
-    deleteArticle(article.get('id'))
+    deleteArticle(article.id)
   }
 
   const buttonExpandText = isOpen ? '-' : '+'
@@ -29,18 +29,18 @@ export const Article = (props) => {
   const articleContent = () => {
     if (!isOpen) return null
 
-    return article.get('status') === fetchDataStatus[TYPE_SUCCESS] ? (
+    return article.status === fetchDataStatus[TYPE_SUCCESS] ? (
       <>
-        <p>{article.get('text')}</p>
+        <p>{article.text}</p>
         <CommentsConnected
           id={1}
           store={store}
-          commentIds={article.get('comments')}
-          articleId={article.get('id')}
+          commentIds={article.comments}
+          articleId={article.id}
         />
 
         {/* <button onClick={onAddComment}>ADD</button> */}
-        <NewCommentForm articleId={article.get('id')} store={store}></NewCommentForm>
+        <NewCommentForm articleId={article.id} store={store}></NewCommentForm>
       </>
     ) : (
       <Loader />
@@ -49,7 +49,7 @@ export const Article = (props) => {
 
   return (
     <li className="article-list__item">
-      <h2>{article.get('title')}</h2>
+      <h2>{article.title}</h2>
       <button data-test-delete-article="true" onClick={onDeleteClick}>
         Remove
       </button>

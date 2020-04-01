@@ -1,4 +1,3 @@
-import { Immutable } from 'immutable'
 import { createSelector } from 'reselect'
 
 import { GLOBAL_FETCH_STATUS_KEY, fetchDataStatus } from '../constants/store'
@@ -10,7 +9,7 @@ const getArticles = (state) => state.articles
 
 export const getFilteredArticles = createSelector(getArticles, getFilter, (articles, filters) => {
   return articles.filter((article) => {
-    const articleDate = new Date(article.date)
+    const articleDate = new Date(article.get('date'))
 
     return (
       (filters.dateFrom ? articleDate >= filters.dateFrom : true) &&
@@ -23,7 +22,7 @@ export const getCommentsByIds = createSelector(
   (state, ids) => ids,
   (state) => state.comments,
   (ids, allComments) =>
-    (ids && allComments.filter((comment) => ids.indexOf(comment.get('id')) >= 0)) || undefined
+    (ids && allComments.filter((comment) => ids.indexOf(comment.id) >= 0)) || undefined
 )
 
 export const getStatusArticlesLoaded = (state) => {

@@ -1,5 +1,7 @@
 import { Map, List, fromJS } from 'immutable'
 
+import { ArticleRecord, CommentRecord } from '../data-records/index'
+
 import {
   ADD_ARTICLE,
   ADD_COMMENT,
@@ -8,13 +10,10 @@ import {
   SET_FILTER_DATE_FROM,
   SET_FILTER_DATE_TILL,
   DELETE_ARTICLE,
-  SET_FETCH_STATUS,
   TYPE_SUCCESS,
   TYPE_ERROR,
   TYPE_REQUEST
 } from '../constants/action-types'
-
-import { FETCH_STATUS_KEY } from '../constants/store'
 
 const defaultFilter = {
   fromDate: '',
@@ -43,10 +42,10 @@ export const articlesReducer = (articles = new Map({}), action) => {
 
   switch (type) {
     case `${POPULATE_ARTICLES}_${TYPE_SUCCESS}`:
-      return articles.merge(payload)
+      return articles.merge(payload.map((v) => ArticleRecord(v)))
 
     case `${ADD_ARTICLE}_${TYPE_SUCCESS}`:
-      return articles.update(payload.get('id'), () => payload)
+      return articles.update(payload.get('id'), () => ArticleRecord(payload))
 
     case DELETE_ARTICLE:
       return articles.delete(payload.articleId)
@@ -67,10 +66,13 @@ export const commentsReducer = (comments = new Map({}), action) => {
 
   switch (type) {
     case `${POPULATE_COMMENTS}_${TYPE_SUCCESS}`:
-      return comments.merge(payload)
+      return comments.merge(payload.map((v) => CommentRecord(v)))
 
     case ADD_COMMENT:
-      return comments.set(payload.randomId, fromJS(payload).set('id', payload.randomId))
+      return comments.set(
+        payload.randomId,
+        CommentRecord(fromJS(payload).set('id', payload.randomId))
+      )
 
     default:
       return comments

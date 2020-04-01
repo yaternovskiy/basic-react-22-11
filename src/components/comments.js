@@ -10,9 +10,9 @@ const renderComments = (comments) => {
     <>
       {comments
         ? comments.valueSeq().map((comment) => (
-            <li key={comment.get('id')}>
-              <h4 data-test="comment username">{comment.get('user')}</h4>
-              <p>{comment.get('text')}</p>
+            <li key={comment.id}>
+              <h4 data-test="comment username">{comment.user}</h4>
+              <p>{comment.text}</p>
             </li>
           ))
         : null}
@@ -21,7 +21,7 @@ const renderComments = (comments) => {
 }
 
 export const Comments = (props) => {
-  const { comments, articleId, fetchingStatus, fetchComments } = props
+  const { comments, articleId, fetchComments } = props
 
   const [isOpen, toggleOpen] = useState(false)
 
@@ -54,10 +54,6 @@ export const Comments = (props) => {
 
 Comment.PropTypes = {
   comments: PropTypes.arrayOf(PropTypes.shape())
-}
-
-Comment.defaultProps = {
-  comments: []
 }
 
 const mapStateToProps = (state, ownProps) => {
