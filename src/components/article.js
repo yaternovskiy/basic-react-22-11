@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -13,8 +13,12 @@ import { TYPE_SUCCESS } from '../constants/action-types'
 import { createFetchArticleText, deleteArticle } from '../store/actionCreators'
 import { getArticleById } from '../store/selectors'
 
+import { I18nContext } from '../App'
+
 export const ArticleComponent = (props) => {
   const { article, id, isOpen, toggleOpen, deleteArticle, fetchArticleText, asLink } = props
+
+  const lang = useContext(I18nContext)
 
   useEffect(() => {
     if (isOpen && (!article || article.status !== fetchDataStatus[TYPE_SUCCESS])) {
@@ -62,7 +66,7 @@ export const ArticleComponent = (props) => {
     <li className="article-list__item">
       {articleTitle()}
       <button data-test-delete-article="true" onClick={onDeleteClick}>
-        Remove
+        {lang.Remove}
       </button>
       {asLink && (
         <button data-test-expand-article="true" onClick={onToggleClick}>

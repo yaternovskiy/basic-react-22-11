@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { getCommentsByIds, getStatusArticleCommentLoaded } from '../store/selectors'
 import { Loader } from './loader'
 import { createFetchAllArticleComments } from '../store/actionCreators'
+
+import { I18nContext } from '../App'
 
 const renderComments = (comments) => {
   return (
@@ -23,6 +25,8 @@ const renderComments = (comments) => {
 export const Comments = (props) => {
   const { comments, articleId, fetchComments } = props
 
+  const lang = useContext(I18nContext)
+
   const [isOpen, toggleOpen] = useState(false)
 
   useEffect(() => {
@@ -32,7 +36,7 @@ export const Comments = (props) => {
 
   const expandCollapse = () => toggleOpen(!isOpen)
 
-  const buttonText = isOpen ? 'Hide comments' : 'Show comments'
+  const buttonText = isOpen ? lang.Hide_comments : lang.Show_comments
 
   const isLoading = false
 
