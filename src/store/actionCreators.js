@@ -1,7 +1,7 @@
 import { fromJS, Map } from 'immutable'
 
 import { keyBy } from 'lodash'
-
+import { push, replace } from 'connected-react-router'
 import {
   SET_FILTER_DATE_FROM,
   SET_FILTER_DATE_TILL,
@@ -128,7 +128,10 @@ const fetchApiRecord = (payload) => (dispatch) => {
   //dispatch(createFetchRecordStatusRequest(payload))
 
   return fetch(url)
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.status > 400) throw 'error'
+      return response.json()
+    })
     .then(
       (response) => {
         dispatch({
@@ -139,6 +142,8 @@ const fetchApiRecord = (payload) => (dispatch) => {
           })
         })
       },
-      (error) => {} //dispatch(createFetchStatusError(type))
+      (error) => {
+        dispatch(replace(`/${error}`))
+      } //dispatch(createFetchStatusError(type))
     )
 }

@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-
 import { Provider } from 'react-redux'
+import { ConnectedRouter as Router } from 'connected-react-router'
+import { Switch, Route } from 'react-router-dom'
 
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import history from './history'
 
 import { routes } from './constants/routes'
 
@@ -12,11 +13,13 @@ import { NotFound } from './pages/not_found'
 
 import store from './store'
 
+console.log({ history })
+
 class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Router>
+        <Router history={history}>
           <Navigation />
 
           <Switch>
