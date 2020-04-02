@@ -4,11 +4,7 @@ import PropTypes from 'prop-types'
 
 import { getFilteredArticles, getStatusArticlesLoaded } from '../store/selectors'
 
-import {
-  deleteArticle,
-  createFetchAllArticles,
-  createFetchArticleText
-} from '../store/actionCreators'
+import { createFetchAllArticles } from '../store/actionCreators'
 
 //import { FETCH_STATUS } from '../constants/store'
 
@@ -16,22 +12,12 @@ import { Article } from './article'
 import { Loader } from './loader'
 import { Accordion } from '../decorators/accordion'
 
-const renderList = (props) => {
-  const {
-    openId,
-    toggleOpen,
-    articles,
-    deleteArticle,
-    store,
-    articlesLoaded,
-    fetchArticleText
-  } = props
-
-  let isDataFetched = false
+const ArticleList = (props) => {
+  const { openId, toggleOpen, articles, articlesLoaded, fetchAllArticles } = props
 
   useEffect(() => {
-    store.dispatch(createFetchAllArticles())
-  }, [isDataFetched])
+    if (!articlesLoaded) fetchAllArticles()
+  }, [articlesLoaded])
 
   return (
     <div className="article-list">
@@ -42,14 +28,11 @@ const renderList = (props) => {
         <ul>
           {articles.valueSeq().map((article) => (
             <Article
-              key={article.get('id')}
-              store={store}
-              article={article}
-              id={article.get('id')}
-              isOpen={openId === article.get('id')}
+              key={article.id}
+              id={article.id}
+              isOpen={openId === article.id}
               toggleOpen={toggleOpen}
-              deleteArticle={deleteArticle}
-              fetchArticleText={fetchArticleText}
+              asLink
             />
           ))}
         </ul>
@@ -58,16 +41,13 @@ const renderList = (props) => {
   )
 }
 
-const ArticleList = (props) => renderList(props)
-
 const mapStateToProps = (state) => ({
   articles: getFilteredArticles(state),
   articlesLoaded: getStatusArticlesLoaded(state)
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  deleteArticle: (id) => dispatch(deleteArticle(id)),
-  fetchArticleText: (id) => dispatch(createFetchArticleText(id))
+  fetchAllArticles: () => dispatch(createFetchAllArticles())
 })
 
 ArticleList.propTypes = {

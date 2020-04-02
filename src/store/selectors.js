@@ -31,3 +31,9 @@ export const getStatusArticlesLoaded = (state) => {
 
 export const getStatusArticleCommentLoaded = (state, id) =>
   state.articles.get(id).get('commentsStatus') === fetchDataStatus[TYPE_SUCCESS]
+
+export const getArticleById = createSelector(
+  (state) => getArticles(state),
+  (_, id) => id,
+  (articles, id) => articles.get(id)
+)
