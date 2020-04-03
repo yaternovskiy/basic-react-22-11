@@ -1,6 +1,7 @@
 import React, { useEffect, useContext } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { CSSTransition } from 'react-transition-group'
 
 import { Link } from 'react-router-dom'
 
@@ -15,8 +16,16 @@ import { getArticleById } from '../store/selectors'
 
 import { I18nContext } from '../App'
 
+import styles from './styles.css'
+
+const transitionClassNames = {
+  enter: 'article__text-enter',
+  enterActive: 'article__text--enter--active',
+  enterDone: 'article__text--enter--done'
+}
+
 export const ArticleComponent = (props) => {
-  const { article, id, isOpen, toggleOpen, deleteArticle, fetchArticleText, asLink } = props
+  const { article, id, isOpen, toggleOpen, deleteArticle, fetchArticleText, asLink, hide } = props
 
   const lang = useContext(I18nContext)
 
@@ -31,7 +40,7 @@ export const ArticleComponent = (props) => {
   }
 
   const onDeleteClick = () => {
-    deleteArticle(article.id)
+    hide(article.id)
   }
 
   const buttonExpandText = isOpen ? '-' : '+'
@@ -63,7 +72,7 @@ export const ArticleComponent = (props) => {
   if (!article) return null
 
   return (
-    <li className="article-list__item">
+    <li>
       {articleTitle()}
       <button data-test-delete-article="true" onClick={onDeleteClick}>
         {lang.Remove}
@@ -73,7 +82,9 @@ export const ArticleComponent = (props) => {
           {buttonExpandText}
         </button>
       )}
-      {articleContent()}
+      <CSSTransition in={isOpen} classNames={transitionClassNames}>
+        <div className="article__text">{articleContent()}</div>
+      </CSSTransition>
     </li>
   )
 }

@@ -1,0 +1,25 @@
+.article-list {
+
+}
+
+.article-list__item.exit {
+    opacity: 1;
+}
+
+.article-list__item.exit-active {
+    opacity: 0;
+    transition: opacity 500ms ease-in;
+}
+
+.article__text {
+    max-height: 0;
+    overflow: hidden;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: all 1s;
+}
+
+.article__text--enter--done {
+    max-height: unset;
+    transform: scaleY(1);
+}
