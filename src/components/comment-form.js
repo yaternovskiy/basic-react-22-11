@@ -26,9 +26,9 @@ export const CommentForm = (props) => {
 
   return (
     <form onSubmit={addNew}>
-      <label for={`name-${articleId}`}>Name</label>
+      <label htmlFor={`name-${articleId}`}>Name</label>
       <input id={`name-${articleId}`} type="text" onInput={onInputUser} value={user}></input>
-      <label for={`comment-${articleId}`}>Comment</label>
+      <label htmlFor={`comment-${articleId}`}>Comment</label>
       <textarea id={`comment-${articleId}`} onInput={onInputText} value={text}></textarea>
       <button type="submit">Add</button>
       <button type="button" onClick={() => addRandomComment({ articleId })}>
