@@ -1,4 +1,5 @@
 import { fromJS, Map } from 'immutable'
+import { createAction } from 'redux-actions'
 
 import { keyBy } from 'lodash'
 import { push, replace } from 'connected-react-router'
@@ -25,13 +26,9 @@ import {
 } from '../constants/store'
 import { getFetchUrl } from '../helpers/api-helpers'
 
-export const setFilterDateFrom = (date) => {
-  return { type: SET_FILTER_DATE_FROM, payload: date }
-}
+export const setFilterDateFrom = createAction(SET_FILTER_DATE_FROM)
 
-export const setFilterDateTill = (date) => {
-  return { type: SET_FILTER_DATE_TILL, payload: date }
-}
+export const setFilterDateTill = createAction(SET_FILTER_DATE_TILL)
 
 export const addNewAutoComment = (payload) => {
   return {

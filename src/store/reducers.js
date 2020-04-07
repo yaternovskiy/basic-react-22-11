@@ -1,4 +1,5 @@
 import { Map, List, fromJS } from 'immutable'
+import { handleActions } from 'redux-actions'
 
 import { ArticleRecord, CommentRecord } from '../data-records/index'
 
@@ -15,27 +16,26 @@ import {
   TYPE_REQUEST
 } from '../constants/action-types'
 
+import { setFilterDateFrom, setFilterDateTill } from './actionCreators'
+
 const defaultFilter = {
   fromDate: '',
   tillDate: ''
 }
 
-export const filterReducer = (filter = defaultFilter, action) => {
-  switch (action.type) {
-    case SET_FILTER_DATE_FROM:
-      return {
-        ...filter,
-        dateFrom: action.payload
-      }
-    case SET_FILTER_DATE_TILL:
-      return {
-        ...filter,
-        dateTill: action.payload
-      }
-    default:
-      return filter
-  }
-}
+export const filterReducer = handleActions(
+  {
+    [setFilterDateFrom]: (state, { payload: dateFrom }) => ({
+      ...state,
+      fromDate: dateFrom
+    }),
+    [setFilterDateTill]: (state, { payload: dateTill }) => ({
+      ...state,
+      tillDate: dateTill
+    })
+  },
+  defaultFilter
+)
 
 export const articlesReducer = (articles = new Map({}), action) => {
   const { type, payload } = action

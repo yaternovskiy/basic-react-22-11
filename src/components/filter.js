@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -7,19 +7,19 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { setFilterDateFrom, setFilterDateTill } from '../store/actionCreators'
 
 const FilterWrapper = (props) => {
-  const { store } = props
+  const dispatch = useDispatch()
 
   const [startDate, setStartDate] = useState()
   const [endDate, setEndDate] = useState()
 
   const onChangeDateFrom = (date) => {
     setStartDate(date)
-    store.dispatch(setFilterDateFrom(date))
+    dispatch(setFilterDateFrom(date))
   }
 
   const onChangeDateTill = (date) => {
     setEndDate(date)
-    store.dispatch(setFilterDateTill(date))
+    dispatch(setFilterDateTill(date))
   }
 
   return (
@@ -43,4 +43,4 @@ const FilterWrapper = (props) => {
   )
 }
 
-export const Filter = connect()(FilterWrapper)
+export const Filter = FilterWrapper
